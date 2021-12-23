@@ -41,6 +41,7 @@ jobs:
   
   QA-Deploy:
     runs-on: ubuntu-latest
+    needs: DEV-Deploy
     environment:
       name: QA
     steps:
@@ -64,6 +65,7 @@ jobs:
   
   PROD-Deploy:
     runs-on: ubuntu-latest
+    needs: [DEV-Deploy,QA-Deploy]
     environment:
       name: PROD
     steps:
