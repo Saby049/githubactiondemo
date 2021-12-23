@@ -1,0 +1,86 @@
+# This is a basic workflow to help you get started with Actions
+
+name: Azure ARM
+
+# Controls when the workflow will run
+on:
+  # Triggers the workflow on push or pull request events but only for the main branch
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+
+jobs:
+  DEV-Deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: DEV
+    steps:
+
+      # Checkout code
+    - uses: actions/checkout@main
+
+      # Log into Azure
+    - uses: azure/login@v1
+      with:
+        creds: ${{ secrets.AZURE_CREDS }}
+
+      # Deploy ARM template
+    - name: Run Dev deploy
+      uses: azure/arm-deploy@v1
+      with:
+        subscriptionId: ${{ secrets.SUBSCRIPTION }}
+        resourceGroupName: "AD-DEV-rg"
+        template: ./azuredeploy.json
+        parameters: storageAccountType=Standard_LRS
+  
+  QA-Deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: QA
+    steps:
+
+      # Checkout code
+    - uses: actions/checkout@main
+
+      # Log into Azure
+    - uses: azure/login@v1
+      with:
+        creds: ${{ secrets.AZURE_CREDS }}
+
+      # Deploy ARM template
+    - name: Run Dev deploy
+      uses: azure/arm-deploy@v1
+      with:
+        subscriptionId: ${{ secrets.SUBSCRIPTION }}
+        resourceGroupName: "AD-QA-rg"
+        template: ./azuredeploy.json
+        parameters: storageAccountType=Standard_LRS
+  
+  PROD-Deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: PROD
+    steps:
+
+      # Checkout code
+    - uses: actions/checkout@main
+
+      # Log into Azure
+    - uses: azure/login@v1
+      with:
+        creds: ${{ secrets.AZURE_CREDS }}
+
+      # Deploy ARM template
+    - name: Run Dev deploy
+      uses: azure/arm-deploy@v1
+      with:
+        subscriptionId: ${{ secrets.SUBSCRIPTION }}
+        resourceGroupName: "AD-PROD-rg"
+        template: ./azuredeploy.json
+        parameters: storageAccountType=Standard_LRS
